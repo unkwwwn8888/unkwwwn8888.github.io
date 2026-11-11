@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<script src="sonora-fx.js"></script>
+<script src="intro.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonora — Audífonos</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/inter-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/inter-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Sora';font-style:normal;font-weight:100 800;font-display:swap;src:url(fonts/sora-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Sora';font-style:normal;font-weight:100 800;font-display:swap;src:url(fonts/sora-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+:root{--display:"Sora","Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;--text:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;--navy:#00002A;--blue:#1A3F75;--steel:#4E6A9C;--sky:#4EA4CC;--ink:var(--navy);--grey:var(--steel);--line:#dbe3ee;--bg:#fff;--soft:#f3f6fa;--tint:#eaf3f9}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font:17px/1.5 var(--text);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:auto;padding:0 24px}
+
+/* ---------- liquid glass ---------- */
+.glass{position:relative;isolation:isolate;overflow:hidden;cursor:pointer;color:var(--navy);border:1px solid rgba(255,255,255,.7);
+  background:linear-gradient(135deg,rgba(255,255,255,.66),rgba(255,255,255,.18));
+  -webkit-backdrop-filter:blur(14px) saturate(190%);backdrop-filter:blur(14px) saturate(190%);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 1.5px 0 1px rgba(255,255,255,.5),inset 0 -1.5px 1px rgba(0,0,42,.12),0 10px 26px -8px rgba(0,0,42,.34),0 2px 6px rgba(0,0,42,.10);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,background .3s}
+.glass::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(130px 70px at var(--mx,30%) var(--my,0%),rgba(255,255,255,.95),transparent 70%);opacity:.5;transition:opacity .3s}
+.glass::after{content:"";position:absolute;left:9%;right:9%;top:2px;height:44%;z-index:-1;pointer-events:none;border-radius:999px;background:linear-gradient(rgba(255,255,255,.75),rgba(255,255,255,0));opacity:.55}
+.glass:hover{transform:scale(1.05);box-shadow:inset 0 1.5px 0 #fff,inset 1.5px 0 1px rgba(255,255,255,.6),inset 0 -1.5px 1px rgba(0,0,42,.14),0 16px 34px -8px rgba(0,0,42,.42),0 3px 8px rgba(0,0,42,.12)}
+.glass:hover::before{opacity:1}
+.glass:active{transform:scale(.97)}
+.glass.tint{color:#fff;border-color:rgba(255,255,255,.3);background:linear-gradient(135deg,rgba(26,63,117,.94),rgba(0,0,42,.82));
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.55),inset 1.5px 0 1px rgba(255,255,255,.18),inset 0 -2px 3px rgba(0,0,42,.55),0 10px 22px -8px rgba(0,0,42,.65)}
+.glass.tint::before{background:radial-gradient(130px 70px at var(--mx,30%) var(--my,0%),rgba(78,164,204,.8),transparent 70%)}
+.glass.tint::after{opacity:.28}
+.glass.tint:hover{box-shadow:inset 0 1.5px 0 rgba(255,255,255,.7),inset 1.5px 0 1px rgba(255,255,255,.25),inset 0 -2px 3px rgba(0,0,42,.55),0 16px 30px -8px rgba(0,0,42,.7)}
+
+/* ---------- barra ---------- */
+.top{position:fixed;top:0;left:0;right:0;z-index:20;color:var(--navy);transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.top.solid{background:rgba(255,255,255,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-color:var(--line)}
+.bar{max-width:1120px;margin:auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;color:inherit}
+.logosvg{height:30px;width:auto;display:block}
+.bar nav{display:flex;gap:32px;font-size:14px;font-weight:500;color:var(--navy);opacity:.8}
+.bar nav a:hover{opacity:1}
+.cartbtn{font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 18px;border-radius:999px}
+.count{min-width:22px;height:22px;border-radius:999px;background:var(--navy);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;padding:0 6px}
+
+/* ---------- banner ---------- */
+.hero{--dir:1;position:relative;min-height:max(700px,min(100svh,1000px));background:#f8fafd;color:var(--navy);overflow:hidden;border-bottom:1px solid var(--line)}
+.bgvid{position:absolute;inset:-14px;width:calc(100% + 28px);height:calc(100% + 28px);object-fit:cover;object-position:50% 40%;z-index:0;background:#c9d3de;filter:blur(2.2px) saturate(1.12) contrast(1.04);transform:translateZ(0)}
+.veil2{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 62% 80% at 27% 52%,rgba(247,250,253,.74) 0,rgba(247,250,253,.46) 55%,rgba(247,250,253,.06) 100%),linear-gradient(rgba(247,250,253,.5),rgba(247,250,253,0) 20%),linear-gradient(to top,rgba(247,250,253,.86) 0,rgba(247,250,253,.62) 14%,rgba(247,250,253,0) 34%)}
+.grain{position:absolute;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.3 0 0 0 -.68'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.5 0 0 0 -.74'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");opacity:.35}
+.slides{position:absolute;inset:0;z-index:2}
+.slide{--s:.86;position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:center;visibility:hidden;pointer-events:none}
+.slide.leaving{z-index:1;visibility:visible;opacity:0;filter:blur(9px);transition:opacity .9s ease .4s,filter .9s ease .4s}
+.slide.active{--s:1;z-index:2;visibility:visible;pointer-events:auto}
+.slide.leaving .copy>*,.slide.leaving .phones{opacity:1;transform:none;transition:none}
+.slide.leaving .phones{scale:1}
+.bubring{position:absolute;z-index:4;border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(0);will-change:transform,opacity;
+  background:radial-gradient(circle closest-side,rgba(255,255,255,0) 93%,rgba(255,255,255,.55) 96.2%,rgba(255,222,190,1) 98.2%,rgba(70,104,170,.85) 99.4%,rgba(70,104,170,0) 100%)}
+.slide{align-items:center}
+.hwrap{width:100%;max-width:1120px;margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:24px;align-items:center}
+.copy{position:relative;z-index:3;display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.copy>*{opacity:0;transform:translateY(22px) scale(.97);transition:transform .8s cubic-bezier(.2,.75,.2,1),opacity .5s ease}
+.slide.active .copy>*{opacity:1;transform:none}
+.slide.active .copy>:nth-child(1){transition-delay:.5s}.slide.active .copy>:nth-child(2){transition-delay:.56s}.slide.active .copy>:nth-child(3){transition-delay:.62s}.slide.active .copy>:nth-child(4){transition-delay:.68s}.slide.active .copy>:nth-child(5){transition-delay:.74s}
+.badge{pointer-events:none;font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--navy);padding:9px 20px;border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.62));margin-bottom:20px}
+.big{font-family:var(--display);font-size:clamp(48px,7.6vw,108px);font-weight:700;letter-spacing:-.05em;line-height:1;
+  background:linear-gradient(100deg,#00002A 0%,#1A3F75 30%,#00002A 52%,#1A3F75 74%,#4E6A9C 100%);background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 9s ease-in-out infinite alternate;padding-bottom:.06em}
+@keyframes shimmer{from{background-position:0 0}to{background-position:100% 0}}
+.sub{font-size:clamp(17px,1.7vw,22px);font-weight:500;color:var(--navy);margin-top:14px;max-width:26ch;line-height:1.35}
+.hprod{width:100%;max-width:420px;margin-top:28px;padding-top:20px;border-top:1px solid rgba(0,0,42,.18)}
+.hprod h3{font-family:var(--display);font-size:20px;font-weight:600;letter-spacing:-.02em}
+.hprod p{font-size:14px;color:#2f4a78;margin-top:2px}
+.hprice{font-family:var(--display);font-size:clamp(28px,3vw,38px);font-weight:600;letter-spacing:-.035em;margin-top:14px;line-height:1.1}
+.hprice small{font-family:var(--text);font-size:14px;font-weight:500;letter-spacing:0;color:#2f4a78;margin-left:6px}
+.htot{font-size:14px;color:#2f4a78;margin-top:4px}.htot b{color:var(--navy);font-weight:600}
+.cta{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:600;padding:15px 30px;border-radius:999px;margin-top:26px}
+.cta:focus-visible,.tab:focus-visible,.arrow:focus-visible,.cartbtn:focus-visible{outline:2px solid var(--sky);outline-offset:3px}
+.cta svg{width:12px;height:12px}
+.pic2{position:relative;z-index:2;display:grid;place-items:center;min-width:0}
+.phones{height:clamp(320px,56vh,520px);max-width:100%;object-fit:contain;opacity:0;
+  scale:var(--s);transform:translate(calc(var(--px,0) * 18px),calc(var(--py,0) * 10px));
+  transition:transform .35s ease-out,opacity .5s ease,scale 1s cubic-bezier(.2,.9,.25,1.12);
+  filter:drop-shadow(0 30px 34px rgba(0,0,42,.34)) drop-shadow(0 4px 8px rgba(0,0,42,.2))}
+.slide.active .phones{opacity:1;transition-delay:0s,.25s,.25s}
+.tabs{position:absolute;z-index:5;left:max(24px,calc(50% - 560px + 24px));bottom:36px;display:flex;gap:14px}
+.tab{font-family:var(--display);width:128px;background:none;border:0;color:#3b5584;text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:0;transition:color .2s}
+.tab:hover,.tab.on{color:var(--navy)}
+.tab i{display:block;height:2px;margin-top:10px;background:rgba(0,0,42,.16);overflow:hidden}
+.tab i::after{content:"";display:block;height:100%;width:0;background:var(--navy)}
+.tab.on i::after{animation:prog 7s linear forwards}
+.hero.paused .tab.on i::after{animation-play-state:paused}
+@keyframes prog{to{width:100%}}
+.arrow{position:absolute;z-index:5;top:50%;width:48px;height:48px;margin-top:-24px;border-radius:999px;font-size:22px;line-height:1;display:grid;place-items:center;padding:0}
+.arrow.prev{left:max(16px,calc(50% - 640px))}.arrow.next{right:max(16px,calc(50% - 640px))}
+
+/* ---------- secciones ---------- */
+.sec{padding:112px 0 56px}
+.eyebrow{font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);margin-bottom:12px}
+.sec h2.title{font-family:var(--display);font-size:clamp(32px,4.6vw,52px);letter-spacing:-.04em;line-height:1.08;font-weight:600;max-width:16ch}
+.sec .lead{margin-top:16px;font-size:20px;color:var(--grey);max-width:40ch}
+.grid{max-width:1072px;margin:48px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.card{background:var(--bg);display:flex;flex-direction:column;transition:background .2s}
+.card:hover{background:#fafcfe}
+.pic{display:block;aspect-ratio:1;background:radial-gradient(circle at 50% 42%,#fff 0,var(--soft) 62%,var(--tint) 100%);position:relative;overflow:hidden}
+.pic img{position:absolute;left:10%;top:10%;width:80%;height:80%;object-fit:contain;mix-blend-mode:multiply;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.card:hover .pic img{transform:scale(1.06)}
+.info{padding:28px 28px 32px;display:flex;flex-direction:column;gap:14px;flex:1}
+.tier{align-self:flex-start;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:999px;border:1px solid var(--blue);color:var(--blue)}
+.tier.alta{background:var(--navy);border-color:var(--navy);color:#fff}
+.tier.media{background:var(--tint);border-color:var(--sky)}
+.tier.baja{border-color:var(--steel);color:var(--steel)}
+.brand{font-size:13px;color:var(--grey)}
+h2.name a:hover{text-decoration:underline}
+h2.name{font-family:var(--display);font-size:22px;letter-spacing:-.025em;font-weight:600;line-height:1.15}
+.tag{color:var(--grey);font-size:15px}
+ul.specs{list-style:none;padding:0;font-size:14px;color:var(--grey);border-top:1px solid var(--line)}
+ul.specs li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+ul.specs b{font-weight:500;color:var(--ink);text-align:right}
+.buy{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:6px}
+.price{font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-.03em}
+.taxline{font-size:13px;color:var(--steel);border-top:1px dashed var(--line);padding-top:10px;margin-top:2px}
+.taxline b{color:var(--navy);font-weight:600}
+.taxline:empty{display:none}
+td.pc{white-space:nowrap}td.pc small{display:block;font-size:12px;color:var(--steel);font-weight:400}td.pc small b{color:var(--navy)}
+.tx{display:flex;justify-content:space-between;font-size:14px;color:var(--steel);margin-bottom:6px}.tx[hidden]{display:none}
+.li .pr small{font-size:11px;color:var(--steel);font-weight:400}
+.price small{display:block;font-size:12px;font-weight:400;color:var(--grey);letter-spacing:0}
+.add{padding:11px 22px;font-size:15px;font-weight:500;border-radius:999px}
+.add:focus-visible,.cartbtn:focus-visible,.q button:focus-visible,.close:focus-visible,.checkout:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+
+/* comparar */
+.tablewrap{margin-top:40px;overflow-x:auto;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:640px}
+th,td{padding:16px 20px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);background:var(--soft)}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:#fafcfe}
+td:first-child{font-weight:600}
+td .tier{display:inline-block}
+.note{padding:28px 0 96px;font-size:13px;color:var(--grey)}
+footer{background:var(--navy);color:rgba(255,255,255,.6);font-size:13px}
+footer div{max-width:1120px;margin:auto;padding:28px 24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer b{color:#fff;font-weight:600}
+
+/* ---------- carrito ---------- */
+.veil{position:fixed;inset:0;background:rgba(0,0,42,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:30}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;color:var(--ink);z-index:31;transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--line)}
+body.open .veil{opacity:1;pointer-events:auto}
+body.open aside{transform:none}
+.ahead{display:flex;justify-content:space-between;align-items:center;padding:16px 24px}
+aside h3{font-family:var(--display);font-size:19px;font-weight:600}
+.close{background:none;border:0;font-size:26px;line-height:1;color:var(--grey);padding:4px 8px}
+.close:hover{color:var(--ink)}
+.items{flex:1;overflow:auto;padding:0 24px}
+.empty{color:var(--grey);padding:40px 0;text-align:center}
+.row{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center}
+.row img{width:72px;height:72px;object-fit:contain;background:var(--soft);mix-blend-mode:multiply}
+.row .n{font-size:15px;font-weight:500;line-height:1.25}
+.row .p{font-size:14px;color:var(--grey)}
+.q{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;margin-top:6px}
+.q button{width:28px;height:28px;background:none;border:0;border-radius:999px;font-size:16px;color:var(--ink)}
+.q button:hover{background:var(--tint)}
+.q span{min-width:22px;text-align:center;font-size:14px}
+.rm{background:none;border:0;color:var(--grey);font-size:13px;text-decoration:underline}
+.rm:hover{color:var(--ink)}
+.foot{padding:20px 24px 28px;border-top:1px solid var(--line)}
+.tot{font-family:var(--display);display:flex;justify-content:space-between;font-size:19px;font-weight:600;margin-bottom:14px}
+.checkout{width:100%;padding:14px;font-size:16px;font-weight:500;border-radius:999px}
+.checkout:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.msg{font-size:13px;color:var(--grey);margin-top:10px;min-height:1.4em}
+
+/* ---------- checkout ---------- */
+body.co-open{overflow:hidden}
+.co [tabindex="-1"]:focus{outline:none}
+.co{position:fixed;inset:0;z-index:40;background:var(--bg);overflow:auto;display:none}
+.co.show{display:block}
+.co-top{position:sticky;top:0;z-index:2;background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.co-top .in{max-width:1080px;margin:auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.co-top img{height:28px;display:block}
+.co-back{background:none;border:0;color:var(--steel);font-size:14px;display:flex;align-items:center;gap:6px;padding:8px 0}
+.co-back:hover{color:var(--navy)}
+.co-demo{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--tint);border:1px solid var(--sky);border-radius:999px;padding:4px 12px}
+.co-grid{max-width:1080px;margin:auto;padding:40px 24px 96px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:56px;align-items:start}
+.co h1{font-family:var(--display);font-size:clamp(28px,4vw,40px);letter-spacing:-.035em;font-weight:600;line-height:1.1;margin-bottom:28px}
+.stepper{display:flex;gap:8px;margin-bottom:28px;font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.stepper span{flex:1;border-top:2px solid var(--line);padding-top:10px}
+.stepper span.on{border-color:var(--navy);color:var(--navy)}
+.stepper span.ok{border-color:var(--sky);color:var(--blue)}
+.blk{border:1px solid var(--line);margin-bottom:16px}
+.blk>.hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px}
+.blk h2{font-family:var(--display);font-size:18px;letter-spacing:-.02em;font-weight:600;display:flex;align-items:center;gap:12px}
+.blk h2 b{display:grid;place-items:center;width:26px;height:26px;border-radius:999px;background:var(--navy);color:#fff;font-size:13px;font-weight:600}
+.blk.off h2{color:var(--steel);opacity:.6}.blk.off h2 b{background:var(--line);color:var(--steel)}
+.blk .sumline{font-size:14px;color:var(--steel);padding:0 22px 18px;line-height:1.5}
+.blk .edit{background:none;border:0;color:var(--blue);font-size:14px;text-decoration:underline}
+.blk .bd{padding:4px 22px 24px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.f{display:flex;flex-direction:column;gap:6px}.f.w2{grid-column:1/-1}
+.f label{font-size:13px;font-weight:500}
+.f label i{font-style:normal;color:var(--steel);font-weight:400}
+.f input,.f select,.f textarea{font:inherit;font-size:16px;color:var(--navy);background:#fff;border:1px solid #b8c4d6;border-radius:10px;padding:12px 14px;width:100%;transition:border-color .15s,box-shadow .15s}
+.f textarea{resize:vertical;min-height:72px}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px rgba(78,164,204,.28)}
+.f [aria-invalid="true"]{border-color:#B42318;box-shadow:0 0 0 3px rgba(180,35,24,.12)}
+.f .err{font-size:13px;color:#B42318}
+.f .hint{font-size:12px;color:var(--steel)}
+.pay{display:grid;gap:10px;margin-bottom:8px}
+.pay label{display:flex;align-items:center;gap:12px;border:1px solid #b8c4d6;border-radius:10px;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s}
+.pay label:hover{background:var(--soft)}
+.pay input{accent-color:var(--blue);width:18px;height:18px}
+.pay label:has(input:checked){border-color:var(--blue);background:var(--tint)}
+.pay small{display:block;color:var(--steel);font-size:13px}
+.acts{display:flex;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap}
+.btn{padding:13px 26px;font-size:15px;font-weight:500;border-radius:999px}
+.btn:disabled{opacity:.5;cursor:progress;transform:none}
+.link{background:none;border:0;color:var(--steel);font-size:14px;text-decoration:underline}
+.link:hover{color:var(--navy)}
+.co-sum{position:sticky;top:88px;background:var(--soft);border:1px solid var(--line);padding:24px}
+.co-sum h2{font-family:var(--display);font-size:18px;letter-spacing:-.02em;font-weight:600;margin-bottom:16px}
+.li{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.li .th{position:relative;width:64px;height:64px;background:#fff}
+.li .th img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}
+.li .th em{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:999px;background:var(--navy);color:#fff;font-style:normal;font-size:12px;display:grid;place-items:center}
+.li .n{font-size:14px;font-weight:500;line-height:1.3}.li .s{font-size:12px;color:var(--steel)}
+.li .pr{font-size:14px;font-weight:500}
+.tl{display:flex;justify-content:space-between;font-size:14px;color:var(--steel);padding-top:10px}
+.tl.big{font-family:var(--display);font-size:20px;font-weight:600;color:var(--navy);border-top:1px solid var(--line);margin-top:12px;padding-top:16px;letter-spacing:-.02em}
+.co-note{font-size:12px;color:var(--steel);margin-top:14px;line-height:1.5}
+.done{max-width:640px;margin:0 auto;padding:72px 24px 96px;text-align:center}
+.done .tick{width:72px;height:72px;margin:0 auto 24px;border-radius:999px;display:grid;place-items:center;background:var(--tint);color:var(--blue)}
+.done .id{display:inline-block;font-family:var(--display);font-weight:600;letter-spacing:.06em;background:var(--soft);border:1px solid var(--line);padding:6px 14px;margin:10px 0 18px}
+.done p{color:var(--steel)}
+.done .box{text-align:left;background:var(--soft);border:1px solid var(--line);padding:22px;margin:28px 0;font-size:14px;line-height:1.6;color:var(--navy)}
+.empty-co{max-width:480px;margin:0 auto;padding:96px 24px;text-align:center;color:var(--steel)}
+@media(max-width:900px){.co-grid{grid-template-columns:1fr;gap:32px}.co-sum{position:static;order:-1}.fgrid{grid-template-columns:1fr}}
+
+@media(max-width:1120px){.grid{margin-inline:24px}}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}.bar nav{display:none}
+  .hero{min-height:max(820px,100svh)}
+  .hwrap{grid-template-columns:1fr;gap:0;padding:84px 24px 120px;align-content:start}
+  .pic2{order:-1;margin-bottom:8px}.phones{height:min(300px,38vh)}
+  .copy{align-items:center;text-align:center}.hprod{margin-inline:auto}
+  .tabs{left:50%;transform:translateX(-50%);bottom:28px;gap:8px}.tab{width:96px;font-size:11px}.arrow{display:none}
+  .sec{padding-top:80px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+ <div class="bar">
+  <a class="logo" data-logo-fx href="#inicio" aria-label="Sonora, inicio"><svg class="logosvg" viewBox="0 0 159.5 40" height="30" role="img" aria-label="Sonora" xmlns="http://www.w3.org/2000/svg"><g transform="scale(0.8333)"><path d="M8 31V25a16 16 0 0 1 32 0v6" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><rect x="4" y="28" width="9" height="15" rx="4.5" fill="currentColor"/><rect x="35" y="28" width="9" height="15" rx="4.5" fill="currentColor"/><g stroke="#4EA4CC" stroke-width="3" stroke-linecap="round"><path d="M19.5 33v5"/><path d="M24 29.5v12"/><path d="M28.5 32v7"/></g></g><path transform="translate(52 29.5)" d="M10.15 0.57Q7.26 0.57 5.26 -0.36Q3.25 -1.29 2.21 -2.92Q1.17 -4.54 1.17 -6.63H5.34Q5.34 -5.75 5.82 -4.93Q6.3 -4.11 7.36 -3.6Q8.41 -3.09 10.15 -3.09Q11.73 -3.09 12.77 -3.53Q13.81 -3.97 14.33 -4.72Q14.85 -5.46 14.85 -6.39Q14.85 -7.54 13.86 -8.25Q12.87 -8.96 10.79 -9.13L8.87 -9.3Q5.71 -9.57 3.84 -11.27Q1.96 -12.96 1.96 -15.75Q1.96 -17.84 2.96 -19.35Q3.94 -20.86 5.73 -21.7Q7.51 -22.53 9.91 -22.53Q12.4 -22.53 14.21 -21.66Q16.02 -20.79 17 -19.21Q17.98 -17.64 17.98 -15.51H13.81Q13.81 -16.39 13.39 -17.16Q12.96 -17.93 12.1 -18.4Q11.23 -18.87 9.91 -18.87Q8.65 -18.87 7.81 -18.44Q6.97 -18.02 6.55 -17.3Q6.13 -16.59 6.13 -15.75Q6.13 -14.73 6.88 -13.96Q7.63 -13.2 9.25 -13.06L11.17 -12.9Q13.53 -12.71 15.29 -11.89Q17.05 -11.08 18.04 -9.71Q19.02 -8.34 19.02 -6.39Q19.02 -4.32 17.93 -2.75Q16.84 -1.17 14.86 -0.3Q12.87 0.57 10.15 0.57Z M29.8 0.57Q27.66 0.57 26.01 -0.12Q24.36 -0.81 23.22 -1.99Q22.08 -3.17 21.49 -4.67Q20.91 -6.17 20.91 -7.8V-8.43Q20.91 -10.09 21.52 -11.62Q22.12 -13.14 23.28 -14.32Q24.43 -15.49 26.08 -16.18Q27.73 -16.86 29.8 -16.86Q31.89 -16.86 33.53 -16.18Q35.17 -15.49 36.33 -14.32Q37.48 -13.14 38.09 -11.62Q38.7 -10.09 38.7 -8.43V-7.8Q38.7 -6.17 38.11 -4.67Q37.53 -3.17 36.39 -1.99Q35.25 -0.81 33.6 -0.12Q31.95 0.57 29.8 0.57ZM29.8 -3Q31.33 -3 32.38 -3.67Q33.43 -4.33 33.98 -5.5Q34.53 -6.66 34.53 -8.12Q34.53 -9.62 33.97 -10.78Q33.41 -11.94 32.35 -12.61Q31.29 -13.29 29.8 -13.29Q28.33 -13.29 27.27 -12.61Q26.2 -11.94 25.64 -10.78Q25.08 -9.62 25.08 -8.12Q25.08 -6.66 25.63 -5.5Q26.17 -4.33 27.23 -3.67Q28.29 -3 29.8 -3Z M41.76 0V-16.29H45.06V-9.3H44.76Q44.76 -11.78 45.41 -13.44Q46.06 -15.1 47.38 -15.95Q48.69 -16.8 50.62 -16.8H50.8Q53.73 -16.8 55.23 -14.92Q56.73 -13.04 56.73 -9.31V0H52.56V-9.69Q52.56 -11.19 51.7 -12.12Q50.84 -13.05 49.34 -13.05Q47.8 -13.05 46.87 -12.1Q45.93 -11.14 45.93 -9.57V0Z M68.41 0.57Q66.27 0.57 64.62 -0.12Q62.97 -0.81 61.83 -1.99Q60.69 -3.17 60.1 -4.67Q59.52 -6.17 59.52 -7.8V-8.43Q59.52 -10.09 60.13 -11.62Q60.73 -13.14 61.89 -14.32Q63.04 -15.49 64.69 -16.18Q66.34 -16.86 68.41 -16.86Q70.5 -16.86 72.14 -16.18Q73.78 -15.49 74.94 -14.32Q76.09 -13.14 76.7 -11.62Q77.31 -10.09 77.31 -8.43V-7.8Q77.31 -6.17 76.72 -4.67Q76.14 -3.17 75 -1.99Q73.86 -0.81 72.21 -0.12Q70.56 0.57 68.41 0.57ZM68.41 -3Q69.94 -3 71 -3.67Q72.05 -4.33 72.59 -5.5Q73.14 -6.66 73.14 -8.12Q73.14 -9.62 72.58 -10.78Q72.02 -11.94 70.96 -12.61Q69.9 -13.29 68.41 -13.29Q66.94 -13.29 65.88 -12.61Q64.81 -11.94 64.25 -10.78Q63.69 -9.62 63.69 -8.12Q63.69 -6.66 64.24 -5.5Q64.78 -4.33 65.84 -3.67Q66.9 -3 68.41 -3Z M80.37 0V-16.29H83.67V-9.39H83.58Q83.58 -12.88 85.08 -14.69Q86.58 -16.5 89.49 -16.5H90.09V-12.87H88.95Q86.83 -12.87 85.69 -11.74Q84.54 -10.61 84.54 -8.47V0Z M102.13 0V-4.83H101.44V-10.2Q101.44 -11.59 100.75 -12.29Q100.06 -12.99 98.64 -12.99Q97.89 -12.99 96.84 -12.96Q95.79 -12.93 94.72 -12.88Q93.66 -12.84 92.82 -12.78V-16.32Q93.51 -16.38 94.37 -16.43Q95.23 -16.48 96.16 -16.51Q97.08 -16.53 97.89 -16.53Q100.39 -16.53 102.07 -15.86Q103.74 -15.2 104.59 -13.79Q105.44 -12.38 105.44 -10.09V0ZM96.88 0.42Q95.11 0.42 93.79 -0.2Q92.46 -0.82 91.72 -2Q90.99 -3.18 90.99 -4.83Q90.99 -6.61 91.87 -7.76Q92.74 -8.91 94.35 -9.47Q95.95 -10.04 98.11 -10.04H101.89V-7.54H98.05Q96.63 -7.54 95.86 -6.85Q95.1 -6.15 95.1 -5.02Q95.1 -3.92 95.86 -3.23Q96.63 -2.55 98.05 -2.55Q98.92 -2.55 99.67 -2.86Q100.41 -3.18 100.9 -3.94Q101.38 -4.69 101.44 -6.03L102.47 -4.86Q102.31 -3.15 101.64 -1.98Q100.97 -0.81 99.78 -0.19Q98.59 0.42 96.88 0.42Z" fill="currentColor"/></svg></a>
+  <nav><a href="#tienda">Audífonos</a><a href="#comparar">Comparar</a><a href="#nota">Precios</a></nav>
+  <button class="cartbtn glass" id="open" aria-label="Abrir carrito">Carrito <span class="count" id="count">0</span></button>
+ </div>
+</header>
+
+<section class="hero" id="inicio" aria-roledescription="carrusel" aria-label="Audífonos destacados">
+ <video class="bgvid" id="bgvid" src="media/fondo.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+ <div class="veil2" aria-hidden="true"></div>
+ <div class="grain" aria-hidden="true"></div>
+ <div class="slides">
+  <div class="slide active" data-i="0" aria-hidden="false">
+   <div class="hwrap">
+    <div class="copy">
+     <span class="badge glass">Sin concesiones</span>
+     <h2 class="big">Silencio</h2>
+     <p class="sub">Cancelación de ruido activa</p>
+     <div class="hprod"><h3>Sony WH-1000XM5</h3><p>Alta gama · hasta 30 h de batería</p>
+      <div class="hprice" data-hnet="xm5"></div><div class="htot" data-htot="xm5"></div></div>
+     <a class="cta glass" href="#tienda">Ver audífonos
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 10 10 2M4 2h6v6"/></svg></a>
+    </div>
+    <div class="pic2"><img class="phones" src="img/xm5-hd.webp" alt="Sony WH-1000XM5"></div>
+   </div>
+  </div>
+  <div class="slide" data-i="1" aria-hidden="true">
+   <div class="hwrap">
+    <div class="copy">
+     <span class="badge glass">Justo en medio</span>
+     <h2 class="big">Equilibrio</h2>
+     <p class="sub">ANC liviano, solo 192 gramos</p>
+     <div class="hprod"><h3>Sony WH-CH720N</h3><p>Gama media · hasta 35 h de batería</p>
+      <div class="hprice" data-hnet="ch720n"></div><div class="htot" data-htot="ch720n"></div></div>
+     <a class="cta glass" href="#tienda">Ver audífonos
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 10 10 2M4 2h6v6"/></svg></a>
+    </div>
+    <div class="pic2"><img class="phones" src="img/ch720n-hd.webp" alt="Sony WH-CH720N"></div>
+   </div>
+  </div>
+  <div class="slide" data-i="2" aria-hidden="true">
+   <div class="hwrap">
+    <div class="copy">
+     <span class="badge glass" data-outline="t510"></span>
+     <h2 class="big">Esencial</h2>
+     <p class="sub">40 horas de batería</p>
+     <div class="hprod"><h3>JBL Tune 510BT</h3><p>Gama baja · hasta 40 h de batería</p>
+      <div class="hprice" data-hnet="t510"></div><div class="htot" data-htot="t510"></div></div>
+     <a class="cta glass" href="#tienda">Ver audífonos
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 10 10 2M4 2h6v6"/></svg></a>
+    </div>
+    <div class="pic2"><img class="phones" src="img/hero-t510.png" alt="JBL Tune 510BT"></div>
+   </div>
+  </div>
+ </div>
+ <div class="bubring" id="bubring" aria-hidden="true"></div>
+ <button class="arrow prev glass" id="prev" aria-label="Audífono anterior">&#8249;</button>
+ <button class="arrow next glass" id="next" aria-label="Audífono siguiente">&#8250;</button>
+ <div class="tabs" id="tabs" role="tablist">
+  <button class="tab on" data-i="0" role="tab" aria-selected="true">01 Alta gama<i></i></button>
+  <button class="tab" data-i="1" role="tab" aria-selected="false">02 Gama media<i></i></button>
+  <button class="tab" data-i="2" role="tab" aria-selected="false">03 Gama baja<i></i></button>
+ </div>
+</section>
+
+<section class="sec" id="tienda"><div class="wrap">
+ <p class="eyebrow">Colección</p>
+ <h2 class="title">Elige tu gama.</h2>
+ <p class="lead">Un audífono por presupuesto, de lo esencial a lo más completo.</p>
+ <div class="grid" id="productos"></div>
+</div></section>
+
+<section class="sec" id="comparar"><div class="wrap">
+ <p class="eyebrow">Comparar</p>
+ <h2 class="title">Lado a lado.</h2>
+ <div class="tablewrap"><table>
+  <thead><tr><th>Modelo</th><th>Gama</th><th id="th-precio">Precio neto</th><th>Cancelación</th><th>Batería</th><th>Peso</th></tr></thead>
+  <tbody id="tabla"></tbody>
+ </table></div>
+ <p class="note" id="nota"></p>
+</div></section>
+
+<footer><div><span style="display:flex;align-items:center;gap:14px"><img src="logo-white.svg" alt="Sonora" height="26"> tienda local de demostración</span><span>Sin pasarela de pago · 127.0.0.1</span></div></footer>
+
+<div class="co" id="co" role="dialog" aria-modal="true" aria-label="Finalizar compra">
+ <div class="co-top"><div class="in">
+  <button class="co-back" id="co-back" type="button">&#8592; Volver a la tienda</button>
+  <img src="logo.svg" alt="Sonora">
+  <span class="co-demo">Modo demostración</span>
+ </div></div>
+ <div id="co-body"></div>
+</div>
+
+<div class="veil" id="veil"></div>
+<aside aria-label="Carrito de compras">
+  <div class="ahead"><h3>Tu carrito</h3><button class="close" id="close" aria-label="Cerrar">×</button></div>
+  <div class="items" id="items"></div>
+  <div class="foot">
+    <div class="tx"><span>Subtotal neto</span><span id="neto">$0</span></div>
+    <div class="tx"><span>IVA 19%</span><span id="ivaT">$0</span></div>
+    <div class="tot"><span>Total</span><span id="total">$0</span></div>
+    <button class="checkout glass tint" id="checkout">Finalizar compra</button>
+    <p class="msg" id="msg"></p>
+  </div>
+</aside>
+
+<script>
+const PRODUCTS=[
+ {id:"xm5",tier:"Alta gama",cls:"alta",brand:"Sony",name:"WH-1000XM5",tag:"Cancelación de ruido líder de la marca, para quien no quiere ceder en nada.",price:399.99,img:"img/xm5-hd.webp",anc:"Activa",bat:"30 h",peso:"250 g",
+  specs:[["Tipo","Over-ear inalámbrico"],["Cancelación de ruido","Activa (ANC)"],["Batería","Hasta 30 h"],["Peso","250 g"],["Códec destacado","LDAC"]]},
+ {id:"ch720n",tier:"Gama media",cls:"media",brand:"Sony",name:"WH-CH720N",tag:"Cancelación de ruido en un cuerpo liviano y a menos de la mitad del precio.",price:149.99,img:"img/ch720n-hd.webp",anc:"Activa",bat:"35 h",peso:"192 g",
+  specs:[["Tipo","Over-ear inalámbrico"],["Cancelación de ruido","Activa (ANC)"],["Batería","Hasta 35 h"],["Peso","192 g"],["Multipunto","Sí"]]},
+ {id:"t510",tier:"Gama baja",cls:"baja",brand:"JBL",name:"Tune 510BT",tag:"Sonido JBL, plegable y 40 horas de batería: la opción más accesible.",price:49.95,img:"img/jbl-tune-510bt.webp",anc:"No",bat:"40 h",peso:"160 g",
+  specs:[["Tipo","On-ear inalámbrico"],["Cancelación de ruido","No"],["Batería","Hasta 40 h"],["Peso","160 g"],["Bluetooth","5.0"]]}
+];
+const $=s=>document.querySelector(s);
+/* ===== CONFIGURACIÓN DE LA TIENDA =====
+   Precios: se parte del precio de lista en USD (p.price), se convierte con el dólar observado y se le suma el IVA;
+   el resultado se redondea a la decena. Para actualizar, cambia fx.rate / fx.date.
+   Despacho: valores ILUSTRATIVOS (no son tarifas reales de ningún courier), desde la sucursal de Santiago Centro. */
+const CONFIG={
+  currency:"CLP", iva:0.19,
+  fx:{rate:970.94,date:"2026-11-06",source:"dólar observado, Banco Central de Chile"},
+  shipping:{origin:"Santiago Centro",zones:{rm:3990,centro:5990,extremo:8990},freeOver:150000}
+};
+const ZONA_CENTRO=["Coquimbo","Valparaíso","O'Higgins","Maule","Ñuble","Biobío"];
+const zoneOf=r=>r==="Metropolitana de Santiago"?"rm":ZONA_CENTRO.includes(r)?"centro":"extremo";
+const fmtCLP=new Intl.NumberFormat("es-CL",{style:"currency",currency:"CLP",maximumFractionDigits:0});
+const fmtUSD=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
+const money=n=>CONFIG.currency==="CLP"?fmtCLP.format(n):fmtUSD.format(n);
+const netOf=p=>CONFIG.currency==="CLP"?Math.round(p.price*CONFIG.fx.rate/10)*10:p.price;
+const ivaOf=p=>CONFIG.currency==="CLP"?Math.round(netOf(p)*CONFIG.iva):0;
+const priceOf=p=>netOf(p)+ivaOf(p);
+const ivaPct=()=>Math.round(CONFIG.iva*100)+"%";
+const priceNote=()=>CONFIG.currency==="CLP"?"Precio neto (sin IVA)":"USD · precio de lista";
+const taxLine=p=>CONFIG.currency==="CLP"?`IVA ${ivaPct()} ${money(ivaOf(p))} · <b>Total ${money(priceOf(p))}</b>`:"";
+let cart={}; try{cart=JSON.parse(localStorage.getItem("sonora-cart")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("sonora-cart",JSON.stringify(cart))}catch(e){}};
+
+$("#productos").innerHTML=PRODUCTS.map(p=>`
+<article class="card">
+  <a class="pic" href="producto-${p.id}.html" aria-label="Ver ${p.brand} ${p.name}"><img src="${p.img}" alt="${p.brand} ${p.name}"></a>
+  <div class="info">
+    <span class="tier ${p.cls}">${p.tier}</span>
+    <div><div class="brand">${p.brand}</div><h2 class="name"><a href="producto-${p.id}.html">${p.name}</a></h2></div>
+    <p class="tag">${p.tag}</p>
+    <ul class="specs">${p.specs.map(s=>`<li>${s[0]}<b>${s[1]}</b></li>`).join("")}</ul>
+    <div class="buy"><div class="price">${money(netOf(p))}<small>${priceNote()}</small></div>
+    <button class="add glass tint" data-id="${p.id}">Agregar</button></div>
+    <p class="taxline">${taxLine(p)}</p>
+  </div>
+</article>`).join("");
+$("#tabla").innerHTML=PRODUCTS.map(p=>`<tr><td>${p.brand} ${p.name}</td><td><span class="tier ${p.cls}">${p.tier}</span></td><td class="pc">${money(netOf(p))}<small>${taxLine(p)}</small></td><td>${p.anc}</td><td>${p.bat}</td><td>${p.peso}</td></tr>`).join("");
+
+function render(){
+  const ids=Object.keys(cart).filter(id=>cart[id]>0);
+  $("#count").textContent=ids.reduce((a,id)=>a+cart[id],0);
+  $("#items").innerHTML=ids.length?ids.map(id=>{const p=PRODUCTS.find(x=>x.id===id);return `
+  <div class="row"><img src="${p.img}" alt="">
+   <div><div class="n">${p.brand} ${p.name}</div><div class="p">${money(netOf(p))}${CONFIG.currency==="CLP"?" + IVA":""}</div>
+    <div class="q"><button data-d="-1" data-id="${id}" aria-label="Quitar uno">−</button><span>${cart[id]}</span><button data-d="1" data-id="${id}" aria-label="Agregar uno">+</button></div></div>
+   <button class="rm" data-rm="${id}">Quitar</button></div>`}).join(""):'<p class="empty">Tu carrito está vacío.</p>';
+  const _sum=f=>ids.reduce((a,id)=>a+cart[id]*f(PRODUCTS.find(x=>x.id===id)),0);
+  $("#neto").textContent=money(_sum(netOf));$("#ivaT").textContent=money(_sum(ivaOf));$("#total").textContent=money(_sum(priceOf));
+  document.querySelectorAll(".tx").forEach(e=>e.hidden=CONFIG.currency!=="CLP");
+  $("#checkout").disabled=!ids.length;
+}
+const open=v=>document.body.classList.toggle("open",v);
+document.addEventListener("click",e=>{
+  const t=e.target;
+  if(t.matches(".add")){cart[t.dataset.id]=(cart[t.dataset.id]||0)+1;save();render();open(true);$("#msg").textContent=""}
+  else if(t.dataset.d){const id=t.dataset.id;cart[id]=Math.max(0,(cart[id]||0)+Number(t.dataset.d));save();render()}
+  else if(t.dataset.rm){delete cart[t.dataset.rm];save();render()}
+});
+$("#open").onclick=()=>open(true);$("#close").onclick=()=>open(false);$("#veil").onclick=()=>open(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")open(false)});
+$("#checkout").onclick=()=>{open(false);location.hash="#checkout"};
+
+/* barra: transparente sobre el banner, blanca al salir de él */
+const top_=$("#top"),hero=$("#inicio");
+const setBar=()=>top_.classList.toggle("solid",hero.getBoundingClientRect().bottom<64);
+addEventListener("scroll",setBar,{passive:true});setBar();
+/* carrusel del banner */
+const slides=[...document.querySelectorAll(".slide")],tabs=[...document.querySelectorAll(".tab")];
+let cur=0,busy=false;
+const BUBBLE_MS=1500, EASE="cubic-bezier(.55,.06,.22,1)";
+const ring=$("#bubring"),still=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function go(n,dir){
+  n=(n+slides.length)%slides.length; if(n===cur||busy)return;
+  const out=slides[cur],inn=slides[n]; busy=true;
+  /* origen de la burbuja: un punto al azar del banner (cambia en cada click) */
+  const hr=hero.getBoundingClientRect(),rnd=(lo,hi)=>lo+Math.random()*(hi-lo);
+  let x=rnd(.1,.9)*hr.width,y=rnd(.15,.85)*hr.height;
+  if(go.last&&Math.hypot(x-go.last[0],y-go.last[1])<hr.width*.25){x=hr.width-x;y=hr.height-y}  /* evita repetir el mismo sitio */
+  go.last=[x,y];
+  const R=Math.hypot(Math.max(x,hr.width-x),Math.max(y,hr.height-y))+30;
+  if(!still){inn.style.transition="none";inn.style.clipPath=`circle(0px at ${x}px ${y}px)`;
+    ring.style.transition="none";ring.style.opacity="1";ring.style.left=x+"px";ring.style.top=y+"px";ring.style.width=ring.style.height=(2*R)+"px";ring.style.transform="translate(-50%,-50%) scale(0)"}
+  out.classList.remove("active");out.classList.add("leaving");out.setAttribute("aria-hidden","true");
+  inn.classList.add("active");inn.setAttribute("aria-hidden","false");
+  tabs.forEach(t=>{t.classList.remove("on");t.setAttribute("aria-selected","false")});
+  void tabs[n].offsetWidth; tabs[n].classList.add("on");tabs[n].setAttribute("aria-selected","true");
+  if(!still){void inn.offsetWidth;
+    inn.style.transition=`clip-path ${BUBBLE_MS}ms ${EASE}`;inn.style.clipPath=`circle(${R}px at ${x}px ${y}px)`;
+    ring.style.transition=`transform ${BUBBLE_MS}ms ${EASE},opacity .25s ease ${BUBBLE_MS-250}ms`;ring.style.transform="translate(-50%,-50%) scale(1)";ring.style.opacity="0"}
+  cur=n; setTimeout(()=>{out.classList.remove("leaving");inn.style.clipPath="";inn.style.transition="";ring.style.transition="none";ring.style.transform="translate(-50%,-50%) scale(0)";busy=false},BUBBLE_MS+60);
+}
+tabs.forEach(t=>t.onclick=()=>go(+t.dataset.i));
+$("#next").onclick=()=>go(cur+1,1);$("#prev").onclick=()=>go(cur-1,-1);
+$("#tabs").addEventListener("animationend",e=>{if(e.animationName==="prog")go(cur+1,1)});
+hero.addEventListener("pointerenter",()=>hero.classList.add("paused"));
+hero.addEventListener("pointerleave",()=>hero.classList.remove("paused"));
+hero.addEventListener("focusin",()=>hero.classList.add("paused"));
+hero.addEventListener("focusout",()=>hero.classList.remove("paused"));
+document.addEventListener("keydown",e=>{
+  if(document.body.classList.contains("open")||document.body.classList.contains("co-open")||hero.getBoundingClientRect().bottom<80)return;
+  if(e.key==="ArrowRight")go(cur+1,1);else if(e.key==="ArrowLeft")go(cur-1,-1);
+});
+let sx=null;
+hero.addEventListener("touchstart",e=>{sx=e.touches[0].clientX},{passive:true});
+hero.addEventListener("touchend",e=>{if(sx===null)return;const d=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(d)>50)go(cur+(d<0?1:-1),d<0?1:-1)});
+/* video de fondo: sin movimiento si el sistema lo pide */
+(()=>{const v=$("#bgvid");if(!v)return;v.muted=true;
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches){v.removeAttribute("autoplay");v.pause()}
+  else{const p=v.play();if(p&&p.catch)p.catch(()=>{})}})();
+/* leve paralaje con el mouse */
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
+  hero.addEventListener("pointermove",e=>{
+    const r=hero.getBoundingClientRect();
+    hero.style.setProperty("--px",((e.clientX-r.left)/r.width-.5).toFixed(3));
+    hero.style.setProperty("--py",((e.clientY-r.top)/r.height-.5).toFixed(3));
+  });
+  hero.addEventListener("pointerleave",()=>{hero.style.setProperty("--px",0);hero.style.setProperty("--py",0)});
+}
+/* brillo especular del vidrio sigue al puntero */
+document.addEventListener("pointermove",e=>{
+  const g=e.target.closest&&e.target.closest(".glass"); if(!g)return;
+  const r=g.getBoundingClientRect(); g.style.setProperty("--mx",(e.clientX-r.left)+"px"); g.style.setProperty("--my",(e.clientY-r.top)+"px");
+});
+render();
+/* textos que dependen de la moneda */
+(()=>{
+  const by=id=>PRODUCTS.find(p=>p.id===id);
+  const clp=CONFIG.currency==="CLP";
+  document.querySelectorAll("[data-hnet]").forEach(el=>{const p=by(el.dataset.hnet);el.innerHTML=clp?`${money(netOf(p))}<small>+ IVA</small>`:money(priceOf(p))});
+  document.querySelectorAll("[data-htot]").forEach(el=>{const p=by(el.dataset.htot);el.innerHTML=clp?`Total con IVA <b>${money(priceOf(p))}</b>`:""});
+  document.querySelectorAll("[data-outline]").forEach(el=>{el.textContent="Desde "+money(netOf(by(el.dataset.outline)))+(clp?" + IVA":"")});
+  const th=$("#th-precio");if(th)th.textContent=CONFIG.currency==="CLP"?"Precio neto (sin IVA)":"Precio (USD)";
+  const nota=$("#nota");
+  if(nota)nota.textContent=CONFIG.currency==="CLP"
+    ?`Precios en pesos chilenos: el precio principal es neto (sin IVA) y debajo se indica el IVA (${ivaPct()}) y el total. Precio de lista de lanzamiento en USD convertido al ${CONFIG.fx.source} de $${CONFIG.fx.rate.toLocaleString("es-CL",{minimumFractionDigits:2})} (${CONFIG.fx.date}). Son valores referenciales; el despacho desde ${CONFIG.shipping.origin} es ilustrativo. Imágenes de referencia obtenidas de internet.`
+    :"Precios en dólares (USD): precio de lista de lanzamiento del fabricante según prensa y tiendas. Imágenes de referencia obtenidas de internet.";
+})();
+/* ================= checkout ================= */
+const REGIONES=["Arica y Parinacota","Tarapacá","Antofagasta","Atacama","Coquimbo","Valparaíso","Metropolitana de Santiago","O'Higgins","Maule","Ñuble","Biobío","La Araucanía","Los Ríos","Los Lagos","Aysén","Magallanes y la Antártica Chilena"];
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const co={step:1,paying:false,done:null,err:{},method:"webpay",
+  data:{name:"",email:"",phone:"",rut:"",street:"",num:"",apt:"",region:"",comuna:"",notes:""}};
+try{Object.assign(co.data,JSON.parse(localStorage.getItem("sonora-co")||"{}"))}catch(e){}
+const saveCo=()=>{try{localStorage.setItem("sonora-co",JSON.stringify(co.data))}catch(e){}};
+const METHODS={webpay:["Webpay","Tarjeta de crédito o débito"],mp:["Mercado Pago","Tarjeta, dinero en cuenta o cuotas"],transf:["Transferencia bancaria","Recibes los datos al confirmar"]};
+
+function cartLines(){return Object.keys(cart).filter(id=>cart[id]>0).map(id=>({p:PRODUCTS.find(x=>x.id===id),q:cart[id]}))}
+function totals(lines){
+  const net=lines.reduce((a,l)=>a+l.q*netOf(l.p),0), iva=lines.reduce((a,l)=>a+l.q*ivaOf(l.p),0), sub=net+iva;
+  const sh=CONFIG.shipping, region=co.data.region;
+  let ship=null; if(region) ship=(sh.freeOver!=null&&sub>=sh.freeOver)?0:sh.zones[zoneOf(region)];
+  return {net,iva,sub,ship,total:sub+(ship||0)};
+}
+function rutOk(r){
+  const c=r.replace(/[.\-\s]/g,"").toUpperCase(); if(!/^\d{7,8}[\dK]$/.test(c))return false;
+  let sum=0,mul=2; for(let i=c.length-2;i>=0;i--){sum+=Number(c[i])*mul;mul=mul===7?2:mul+1}
+  const r_=11-(sum%11), dv=r_===11?"0":r_===10?"K":String(r_); return dv===c[c.length-1];
+}
+function validate(step){
+  const d=co.data,e={};
+  if(step===1){
+    if(d.name.trim().length<3)e.name="Ingresa tu nombre completo.";
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email.trim()))e.email="Ingresa un correo válido, por ejemplo nombre@correo.cl.";
+    const ph=d.phone.replace(/\D/g,""); if(!(ph.length===9||(ph.length===11&&ph.startsWith("56"))))e.phone="Ingresa un celular chileno de 9 dígitos, por ejemplo 9 1234 5678.";
+    if(d.rut.trim()&&!rutOk(d.rut))e.rut="El RUT no es válido. Revisa el dígito verificador.";
+  }
+  if(step===2){
+    if(d.street.trim().length<3)e.street="Ingresa la calle.";
+    if(!d.num.trim())e.num="Ingresa el número.";
+    if(!d.region)e.region="Selecciona la región.";
+    if(d.comuna.trim().length<2)e.comuna="Ingresa la comuna.";
+  }
+  return e;
+}
+function field(name,label,o={}){
+  const err=co.err[name],id="f-"+name;
+  const tag=o.select?`<select id="${id}" name="${name}" autocomplete="${o.ac||"off"}" ${err?'aria-invalid="true" aria-describedby="e-'+name+'"':""}><option value="">Selecciona…</option>${REGIONES.map(r=>`<option${co.data[name]===r?" selected":""}>${esc(r)}</option>`).join("")}</select>`
+   :o.area?`<textarea id="${id}" name="${name}" rows="2">${esc(co.data[name])}</textarea>`
+   :`<input id="${id}" name="${name}" type="${o.type||"text"}" value="${esc(co.data[name])}" autocomplete="${o.ac||"off"}" ${o.mode?`inputmode="${o.mode}"`:""} ${o.ph?`placeholder="${esc(o.ph)}"`:""} ${err?'aria-invalid="true" aria-describedby="e-'+name+'"':""}>`;
+  return `<div class="f${o.w2?" w2":""}"><label for="${id}">${label}${o.opt?" <i>(opcional)</i>":""}</label>${tag}${err?`<p class="err" id="e-${name}" role="alert">${err}</p>`:o.hint?`<p class="hint">${o.hint}</p>`:""}</div>`;
+}
+function stepper(){
+  const t=["Tus datos","Despacho","Pago"];
+  return `<div class="stepper" aria-label="Progreso">${t.map((x,i)=>`<span class="${co.step===i+1?"on":co.step>i+1?"ok":""}">${i+1} · ${x}</span>`).join("")}</div>`;
+}
+function blk(n,title,body,sum){
+  const state=co.step===n?"on":co.step>n?"ok":"off";
+  return `<section class="blk ${state==="off"?"off":""}" id="blk${n}"><div class="hd"><h2 tabindex="-1"><b>${state==="ok"?"✓":n}</b>${title}</h2>${state==="ok"?`<button class="edit" type="button" data-go="${n}">Editar</button>`:""}</div>${state==="on"?`<div class="bd">${body}</div>`:state==="ok"?`<div class="sumline">${sum}</div>`:""}</section>`;
+}
+function step1(){return blk(1,"Tus datos",
+  `<div class="fgrid">${field("name","Nombre y apellido",{ac:"name",w2:1})}${field("email","Correo",{type:"email",ac:"email",mode:"email"})}${field("phone","Celular",{type:"tel",ac:"tel",mode:"tel",ph:"9 1234 5678"})}${field("rut","RUT",{opt:1,w2:1,ph:"12.345.678-5",hint:"Para boleta o factura."})}</div>
+   <div class="acts"><button class="btn glass tint" type="button" data-next="1">Continuar al despacho</button></div>`,
+  `${esc(co.data.name)}<br>${esc(co.data.email)} · ${esc(co.data.phone)}${co.data.rut?`<br>RUT ${esc(co.data.rut)}`:""}`)}
+function step2(){return blk(2,"Despacho a domicilio",
+  `<div class="fgrid">${field("street","Calle",{ac:"address-line1",w2:1})}${field("num","Número",{mode:"numeric",ac:"off"})}${field("apt","Depto, casa u oficina",{opt:1,ac:"address-line2"})}${field("region","Región",{select:1,ac:"address-level1"})}${field("comuna","Comuna",{ac:"address-level2"})}${field("notes","Indicaciones para el despacho",{area:1,opt:1,w2:1})}</div>
+   <div class="acts"><button class="btn glass tint" type="button" data-next="2">Continuar al pago</button><button class="link" type="button" data-go="1">Volver</button></div>`,
+  `${esc(co.data.street)} ${esc(co.data.num)}${co.data.apt?", "+esc(co.data.apt):""}<br>${esc(co.data.comuna)}, ${esc(co.data.region)}`)}
+function step3(lines){
+  const t=totals(lines);
+  return blk(3,"Pago",
+  `<div class="pay" role="radiogroup" aria-label="Medio de pago">${Object.keys(METHODS).map(k=>`<label><input type="radio" name="method" value="${k}"${co.method===k?" checked":""}><span>${METHODS[k][0]} <small>${METHODS[k][1]}</small></span></label>`).join("")}</div>
+   <p class="co-note">Es una demostración: no se pide ningún dato de tarjeta ni se realiza ningún cobro real. Al pagar se simula una aprobación.</p>
+   <div class="acts"><button class="btn glass tint" type="button" data-pay="1"${co.paying?" disabled":""}>${co.paying?"Procesando…":"Pagar "+money(t.total)+" (demo)"}</button><button class="link" type="button" data-go="2">Volver</button></div>`,"")}
+function summary(lines){
+  const t=totals(lines);
+  return `<h2>Tu pedido</h2>${lines.map(l=>`<div class="li"><div class="th"><img src="${l.p.img}" alt=""><em>${l.q}</em></div><div><div class="n">${esc(l.p.brand)} ${esc(l.p.name)}</div><div class="s">${esc(l.p.tier)}</div></div><div class="pr">${money(netOf(l.p)*l.q)}${CONFIG.currency==="CLP"?"<small> + IVA</small>":""}</div></div>`).join("")}
+  ${CONFIG.currency==="CLP"?`<div class="tl"><span>Subtotal neto</span><span>${money(t.net)}</span></div>
+  <div class="tl"><span>IVA ${ivaPct()}</span><span>${money(t.iva)}</span></div>`:`<div class="tl"><span>Subtotal</span><span>${money(t.sub)}</span></div>`}
+  <div class="tl"><span>Despacho</span><span>${t.ship==null?"Se calcula con tu región":t.ship===0?"Gratis":money(t.ship)}</span></div>
+  <div class="tl big"><span>Total</span><span>${money(t.total)}</span></div>
+  <p class="co-note">${CONFIG.currency==="CLP"?"Los productos se muestran sin IVA; el total ya lo incluye. ":""}${t.ship==null?`Despachamos desde nuestra sucursal en ${CONFIG.shipping.origin}.`:t.ship===0?`Despacho gratis en compras sobre ${money(CONFIG.shipping.freeOver)} (con IVA).`:`Despacho gratis en compras sobre ${money(CONFIG.shipping.freeOver)} (con IVA).`}</p>`;
+}
+function doneHTML(){
+  const o=co.done,t=o.totals;
+  return `<div class="done"><div class="tick"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+  <h1 tabindex="-1" id="co-h1">Pedido recibido</h1><span class="id">${esc(o.id)}</span>
+  <p>Es una compra de demostración: no se realizó ningún cobro ni se envió ningún correo.</p>
+  <div class="box"><strong>Despacho a</strong><br>${esc(o.customer.name)}<br>${esc(o.customer.street)} ${esc(o.customer.num)}${o.customer.apt?", "+esc(o.customer.apt):""}, ${esc(o.customer.comuna)}, ${esc(o.customer.region)}<br><br>
+   <strong>Medio de pago</strong>: ${esc(METHODS[o.method][0])} (simulado)<br><strong>Total</strong>: ${money(t.total)} (incluye despacho ${t.ship===0?"gratis":money(t.ship)} e IVA ${money(t.iva)})<br><br>
+   ${o.items.map(i=>`${i.q} × ${esc(i.name)}`).join("<br>")}</div>
+  <button class="btn glass tint" type="button" id="co-home">Volver a la tienda</button></div>`;
+}
+function renderCO(focusSel){
+  const body=$("#co-body"),lines=cartLines();
+  if(co.done){body.innerHTML=doneHTML();}
+  else if(!lines.length){body.innerHTML='<div class="empty-co"><h1>Tu carrito está vacío</h1><p style="margin-bottom:24px">Agrega un audífono para continuar con la compra.</p><button class="btn glass tint" type="button" id="co-home">Ver audífonos</button></div>';}
+  else body.innerHTML=`<div class="co-grid"><div><h1>Finalizar compra</h1>${stepper()}${step1()}${step2()}${step3(lines)}</div><div class="co-sum" role="complementary" aria-label="Resumen del pedido">${summary(lines)}</div></div>`;
+  if(focusSel){const el=body.querySelector(focusSel);if(el)el.focus({preventScroll:false})}
+}
+function goStep(n){co.step=n;co.err={};renderCO("#blk"+n+" h2");$("#co").scrollTo({top:0,behavior:"smooth"})}
+function nextStep(n){
+  co.err=validate(n);
+  if(Object.keys(co.err).length){renderCO();const first=$("#co [aria-invalid='true']");if(first)first.focus();return}
+  goStep(n+1);
+}
+function pay(){
+  if(co.paying)return; co.paying=true; renderCO();
+  setTimeout(()=>{
+    const lines=cartLines(),t=totals(lines);
+    const id="SN-"+Date.now().toString(36).toUpperCase().slice(-6);
+    const order={id,date:new Date().toISOString(),method:co.method,customer:{...co.data},totals:t,items:lines.map(l=>({id:l.p.id,name:l.p.brand+" "+l.p.name,q:l.q,net:netOf(l.p),iva:ivaOf(l.p),price:priceOf(l.p)})),demo:true};
+    try{const all=JSON.parse(localStorage.getItem("sonora-orders")||"[]");all.push(order);localStorage.setItem("sonora-orders",JSON.stringify(all))}catch(e){}
+    cart={};save();render();co.paying=false;co.done=order;renderCO("#co-h1");$("#co").scrollTo({top:0});
+  },1400);
+}
+function openCO(){
+  co.done=null;co.paying=false;co.err={};co.step=1;
+  document.body.classList.add("co-open");$("#co").classList.add("show");renderCO("#blk1 h2");$("#co").scrollTo({top:0});
+}
+function closeCO(){document.body.classList.remove("co-open");$("#co").classList.remove("show")}
+function syncRoute(){if(location.hash==="#checkout")openCO();else if($("#co").classList.contains("show"))closeCO()}
+addEventListener("hashchange",syncRoute);
+$("#co").addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.next)nextStep(Number(t.dataset.next));
+  else if(t.dataset.go)goStep(Number(t.dataset.go));
+  else if(t.dataset.pay)pay();
+  else if(t.id==="co-home"||t.id==="co-back"){co.done=null;location.hash="#tienda"}
+});
+$("#co").addEventListener("input",e=>{
+  const n=e.target.name;
+  if(n==="method")co.method=e.target.value;
+  else if(n in co.data){co.data[n]=e.target.value;saveCo();if(n==="region"){const sm=$("#co .co-sum");if(sm)sm.innerHTML=summary(cartLines())}}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#co").classList.contains("show")&&!co.paying)location.hash="#tienda"});
+syncRoute();
+</script>
+</body>
+</html>

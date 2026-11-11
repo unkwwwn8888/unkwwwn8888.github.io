@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<script src="sonora-fx.js"></script>
+<script src="intro.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#00002A">
+<title>Sonora — Audífonos (móvil)</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Inter';font-weight:300 700;font-display:swap;src:url(fonts/inter-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';font-weight:300 700;font-display:swap;src:url(fonts/inter-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C4}
+@font-face{font-family:'Sora';font-weight:100 800;font-display:swap;src:url(fonts/sora-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Sora';font-weight:100 800;font-display:swap;src:url(fonts/sora-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C4}
+:root{--display:"Sora","Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;--text:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+ --navy:#00002A;--blue:#1A3F75;--steel:#4E6A9C;--sky:#4EA4CC;--line:#dbe3ee;--bg:#fff;--soft:#f3f6fa;--tint:#eaf3f9;
+ --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--ease:cubic-bezier(.32,.72,0,1)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font:16px/1.5 var(--text);color:var(--navy);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:calc(84px + var(--sab))}
+body.lock{overflow:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* barra superior */
+.top{position:fixed;inset:0 0 auto 0;z-index:30;padding-top:var(--sat);background:rgba(255,255,255,.82);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid var(--line)}
+.bar{height:56px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
+.bar img{height:26px;display:block}
+.cartbtn{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--soft)}
+.cartbtn svg{width:22px;height:22px}
+.badge{position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;display:grid;place-items:center;transition:transform .3s var(--ease)}
+.badge.pop{transform:scale(1.35)}
+
+/* portada */
+.hero{padding:calc(56px + var(--sat) + 28px) 20px 28px;background:radial-gradient(120% 60% at 50% 0%,var(--tint),#fff 70%)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--sky)}
+h1{font:700 clamp(30px,9vw,40px)/1.08 var(--display);letter-spacing:-.02em;margin:8px 0 10px}
+.lead{color:var(--steel);font-size:15.5px;max-width:34ch}
+.cta{margin-top:20px;display:flex;gap:10px}
+.btn{min-height:48px;padding:0 22px;border-radius:99px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;transition:transform .25s var(--ease)}
+.btn:active{transform:scale(.96)}
+.btn.pri{background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;box-shadow:0 10px 22px -8px rgba(0,0,42,.6)}
+.btn.sec{background:#fff;border:1px solid var(--line)}
+
+/* filtros */
+.chips{position:sticky;top:calc(56px + var(--sat));z-index:20;display:flex;gap:8px;overflow-x:auto;padding:10px 20px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:40px;padding:0 16px;border-radius:99px;border:1px solid var(--line);font-size:14px;font-weight:500;background:#fff;transition:background .2s,color .2s}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* productos */
+.sec{padding:24px 0 8px}
+.sec h2{font:700 24px/1.15 var(--display);letter-spacing:-.015em;padding:0 20px 14px}
+.list{display:grid;gap:16px;padding:0 16px}
+.card{border:1px solid var(--line);border-radius:24px;background:#fff;overflow:hidden;box-shadow:0 12px 30px -18px rgba(0,0,42,.25);scroll-margin-top:120px}
+.card[hidden]{display:none}
+.pic{position:relative;aspect-ratio:1/.92;display:grid;place-items:center;background:radial-gradient(70% 70% at 50% 45%,var(--tint),var(--soft))}
+.pic img{height:88%;width:auto;max-width:90%;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(0,0,42,.22))}
+.tier{position:absolute;top:14px;left:14px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:99px;border:1px solid var(--blue);color:var(--blue);background:rgba(255,255,255,.7)}
+.tier.alta{background:var(--navy);border-color:var(--navy);color:#fff}
+.tier.media{background:var(--tint);border-color:var(--sky)}
+.tier.baja{border-color:var(--steel);color:var(--steel)}
+.body{padding:18px 18px 20px}
+.brand{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--steel)}
+.name{font:700 22px/1.15 var(--display);margin:2px 0 6px}
+.tag{font-size:14.5px;color:var(--steel)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.fact{background:var(--soft);border-radius:14px;padding:10px 6px;text-align:center}
+.fact b{display:block;font:600 15px var(--display)}
+.fact span{font-size:11px;color:var(--steel)}
+details{border-top:1px solid var(--line)}
+summary{list-style:none;min-height:48px;display:flex;align-items:center;justify-content:space-between;font-size:14.5px;font-weight:500;cursor:pointer}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;color:var(--steel);transition:transform .25s var(--ease)}
+details[open] summary::after{transform:rotate(45deg)}
+.specs{list-style:none;padding:0 0 10px}
+.specs li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:14px;border-top:1px dashed var(--line)}
+.specs li b{font-weight:600;text-align:right}
+.buy{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.price{font:700 22px/1.1 var(--display)}
+.price small{display:block;font:400 11.5px var(--text);color:var(--steel);margin-top:3px}
+.tax{font-size:12px;color:var(--steel);margin-top:8px}
+.add{min-height:48px;padding:0 24px;border-radius:99px;font-weight:600;background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;box-shadow:0 10px 20px -8px rgba(0,0,42,.6);transition:transform .25s var(--ease),background .2s}
+.add:active{transform:scale(.94)}
+.add.ok{background:var(--sky)}
+
+/* comparar */
+.cmp{display:grid;gap:10px;padding:0 16px}
+.cmp div{display:grid;grid-template-columns:1fr auto auto auto;gap:6px 14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:18px;font-size:13px;color:var(--steel)}
+.cmp strong{color:var(--navy);font-size:14.5px;grid-column:1/-1}
+.cmp span{white-space:nowrap}
+.cmp span:first-of-type{grid-column:1}
+.cmp b{color:var(--navy);font-weight:600}
+.note{padding:14px 20px 0;font-size:12.5px;color:var(--steel)}
+
+/* barra inferior */
+.dock{position:fixed;inset:auto 0 0 0;z-index:30;padding:10px 16px calc(10px + var(--sab));background:rgba(255,255,255,.88);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.dock .sum{flex:1;line-height:1.2}
+.dock .sum small{font-size:12px;color:var(--steel)}
+.dock .sum b{display:block;font:700 18px var(--display)}
+.dock .btn{flex:none}
+.dock .btn[disabled]{opacity:.45}
+
+/* hoja del carrito */
+.veil{position:fixed;inset:0;z-index:40;background:rgba(0,0,42,.45);opacity:0;pointer-events:none;transition:opacity .3s}
+.veil.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;inset:auto 0 0 0;z-index:41;max-height:86svh;display:flex;flex-direction:column;background:#fff;border-radius:28px 28px 0 0;transform:translateY(105%);transition:transform .45s var(--ease);padding-bottom:var(--sab)}
+.sheet.show{transform:none}
+.grab{width:40px;height:5px;border-radius:99px;background:var(--line);margin:10px auto 0}
+.shead{display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
+.shead h3{font:700 20px var(--display)}
+.x{width:44px;height:44px;border-radius:50%;background:var(--soft);font-size:22px;line-height:1}
+.items{overflow:auto;padding:0 20px;overscroll-behavior:contain}
+.item{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.item img{width:64px;height:64px;object-fit:contain;background:var(--soft);border-radius:14px}
+.item b{display:block;font-size:14.5px;line-height:1.25}
+.item small{color:var(--steel);font-size:13px}
+.qty{display:flex;align-items:center;gap:2px;background:var(--soft);border-radius:99px}
+.qty button{width:40px;height:40px;font-size:20px}
+.qty span{min-width:18px;text-align:center;font-weight:600;font-size:14px}
+.empty{padding:34px 0;text-align:center;color:var(--steel)}
+.tots{padding:12px 20px 16px;border-top:1px solid var(--line);font-size:14px}
+.tots div{display:flex;justify-content:space-between;padding:2px 0;color:var(--steel)}
+.tots .t{color:var(--navy);font:700 18px var(--display);padding-top:8px}
+.tots .btn{width:100%;margin-top:12px}
+
+@media(min-width:700px){body{max-width:520px;margin:0 auto;box-shadow:0 0 0 1px var(--line)}.top,.dock,.sheet{max-width:520px;margin:0 auto}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="bar">
+ <a href="#inicio" data-logo-fx aria-label="Sonora, inicio"><img src="logo.svg" alt="Sonora"></a>
+ <button class="cartbtn" id="open" aria-label="Abrir carrito">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 12H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+  <span class="badge" id="count">0</span>
+ </button>
+</div></header>
+
+<main>
+<section class="hero" id="inicio">
+ <p class="eyebrow">Audífonos inalámbricos</p>
+ <h1>Tu música,<br>sin cables.</h1>
+ <p class="lead">Tres audífonos por presupuesto, de lo esencial a lo más completo.</p>
+ <div class="cta"><a class="btn pri" href="#tienda">Ver audífonos</a><a class="btn sec" href="#comparar">Comparar</a></div>
+</section>
+
+<div class="chips" id="chips" role="group" aria-label="Filtrar por gama">
+ <button class="chip" aria-pressed="true" data-f="todos">Todos</button>
+ <button class="chip" aria-pressed="false" data-f="alta">Alta gama</button>
+ <button class="chip" aria-pressed="false" data-f="media">Gama media</button>
+ <button class="chip" aria-pressed="false" data-f="baja">Gama baja</button>
+</div>
+
+<section class="sec" id="tienda"><h2>Elige tu gama</h2><div class="list" id="productos"></div></section>
+
+<section class="sec" id="comparar"><h2>Lado a lado</h2><div class="cmp" id="cmp"></div><p class="note" id="nota"></p></section>
+</main>
+
+<div class="dock">
+ <div class="sum"><small id="dockl">Tu carrito está vacío</small><b id="dockt">&nbsp;</b></div>
+ <button class="btn pri" id="dockbtn">Ver carrito</button>
+</div>
+
+<div class="veil" id="veil"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Tu carrito" aria-hidden="true">
+ <div class="grab"></div>
+ <div class="shead"><h3>Tu carrito</h3><button class="x" id="close" aria-label="Cerrar">×</button></div>
+ <div class="items" id="items"></div>
+ <div class="tots" id="tots" hidden>
+  <div><span>Subtotal neto</span><span id="neto"></span></div>
+  <div><span>IVA 19%</span><span id="ivaT"></span></div>
+  <div class="t"><span>Total</span><span id="total"></span></div>
+  <a class="btn pri" id="checkout" href="index.html#checkout">Finalizar compra</a>
+ </div>
+</aside>
+
+<script>
+/* Mismos datos y reglas de precio que index.html. El carrito se comparte por localStorage ("sonora-cart"). */
+const PRODUCTS=[
+ {id:"xm5",tier:"Alta gama",cls:"alta",brand:"Sony",name:"WH-1000XM5",tag:"Cancelación de ruido líder de la marca, para quien no quiere ceder en nada.",price:399.99,img:"img/xm5-hd.webp",anc:"Activa",bat:"30 h",peso:"250 g",
+  specs:[["Tipo","Over-ear inalámbrico"],["Cancelación de ruido","Activa (ANC)"],["Batería","Hasta 30 h"],["Peso","250 g"],["Códec destacado","LDAC"]]},
+ {id:"ch720n",tier:"Gama media",cls:"media",brand:"Sony",name:"WH-CH720N",tag:"Cancelación de ruido en un cuerpo liviano y a menos de la mitad del precio.",price:149.99,img:"img/ch720n-hd.webp",anc:"Activa",bat:"35 h",peso:"192 g",
+  specs:[["Tipo","Over-ear inalámbrico"],["Cancelación de ruido","Activa (ANC)"],["Batería","Hasta 35 h"],["Peso","192 g"],["Multipunto","Sí"]]},
+ {id:"t510",tier:"Gama baja",cls:"baja",brand:"JBL",name:"Tune 510BT",tag:"Sonido JBL, plegable y 40 horas de batería: la opción más accesible.",price:49.95,img:"img/hero-t510.png",anc:"No",bat:"40 h",peso:"160 g",
+  specs:[["Tipo","On-ear inalámbrico"],["Cancelación de ruido","No"],["Batería","Hasta 40 h"],["Peso","160 g"],["Bluetooth","5.0"]]}
+];
+const CONFIG={iva:0.19,fx:{rate:970.94,date:"2026-11-06",source:"dólar observado, Banco Central de Chile"}};
+const $=s=>document.querySelector(s);
+const fmt=new Intl.NumberFormat("es-CL",{style:"currency",currency:"CLP",maximumFractionDigits:0});
+const netOf=p=>Math.round(p.price*CONFIG.fx.rate/10)*10;
+const ivaOf=p=>Math.round(netOf(p)*CONFIG.iva);
+const priceOf=p=>netOf(p)+ivaOf(p);
+
+let cart={}; try{cart=JSON.parse(localStorage.getItem("sonora-cart")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("sonora-cart",JSON.stringify(cart))}catch(e){}};
+
+$("#productos").innerHTML=PRODUCTS.map(p=>`
+<article class="card" data-cls="${p.cls}">
+ <a class="pic" href="producto-${p.id}.html" aria-label="Ver ${p.brand} ${p.name}"><span class="tier ${p.cls}">${p.tier}</span><img src="${p.img}" alt="${p.brand} ${p.name}" width="400" height="368" loading="lazy" decoding="async"></a>
+ <div class="body">
+  <div class="brand">${p.brand}</div><h3 class="name"><a href="producto-${p.id}.html">${p.name}</a></h3>
+  <p class="tag">${p.tag}</p>
+  <div class="facts"><div class="fact"><b>${p.anc}</b><span>Cancelación</span></div><div class="fact"><b>${p.bat}</b><span>Batería</span></div><div class="fact"><b>${p.peso}</b><span>Peso</span></div></div>
+  <details><summary>Ficha técnica</summary><ul class="specs">${p.specs.map(s=>`<li>${s[0]}<b>${s[1]}</b></li>`).join("")}</ul></details>
+  <div class="buy"><div class="price">${fmt.format(netOf(p))}<small>Precio neto (sin IVA)</small></div><button class="add" data-id="${p.id}">Agregar</button></div>
+  <p class="tax">IVA 19% ${fmt.format(ivaOf(p))} · <b>Total ${fmt.format(priceOf(p))}</b></p>
+ </div>
+</article>`).join("");
+
+$("#cmp").innerHTML=PRODUCTS.map(p=>`<div><strong>${p.brand} ${p.name}</strong><span>${fmt.format(netOf(p))}</span><span>ANC <b>${p.anc}</b></span><span>Batería <b>${p.bat}</b></span><span><b>${p.peso}</b></span></div>`).join("");
+$("#nota").textContent=`Precios netos (sin IVA), convertidos desde USD con el ${CONFIG.fx.source} del ${CONFIG.fx.date} ($${CONFIG.fx.rate.toString().replace(".",",")}) y redondeados a la decena. El IVA se suma al finalizar.`;
+
+function render(){
+ const ids=Object.keys(cart).filter(id=>cart[id]>0&&PRODUCTS.some(p=>p.id===id));
+ const n=ids.reduce((a,id)=>a+cart[id],0);
+ let neto=0,iva=0;
+ ids.forEach(id=>{const p=PRODUCTS.find(x=>x.id===id);neto+=netOf(p)*cart[id];iva+=ivaOf(p)*cart[id]});
+ $("#count").textContent=n;
+ $("#dockl").textContent=n?`${n} ${n===1?"producto":"productos"} · IVA incl.`:"Tu carrito está vacío";
+ $("#dockt").innerHTML=n?fmt.format(neto+iva):"&nbsp;";
+ $("#dockbtn").textContent=n?"Ver carrito":"Explorar";
+ $("#items").innerHTML=ids.length?ids.map(id=>{const p=PRODUCTS.find(x=>x.id===id);return `
+ <div class="item"><img src="${p.img}" alt=""><div><b>${p.brand} ${p.name}</b><small>${fmt.format(netOf(p))} c/u</small></div>
+ <div class="qty"><button data-d="-1" data-id="${id}" aria-label="Quitar uno">−</button><span>${cart[id]}</span><button data-d="1" data-id="${id}" aria-label="Agregar uno">+</button></div></div>`}).join(""):'<p class="empty">Aún no agregas audífonos.</p>';
+ $("#tots").hidden=!ids.length;
+ $("#neto").textContent=fmt.format(neto);$("#ivaT").textContent=fmt.format(iva);$("#total").textContent=fmt.format(neto+iva);
+}
+function setQty(id,d){cart[id]=Math.max(0,(cart[id]||0)+d);if(!cart[id])delete cart[id];save();render()}
+
+/* hoja del carrito */
+let lastFocus=null;
+function openSheet(){lastFocus=document.activeElement;$("#veil").classList.add("show");$("#sheet").classList.add("show");$("#sheet").setAttribute("aria-hidden","false");document.body.classList.add("lock");$("#close").focus()}
+function closeSheet(){$("#veil").classList.remove("show");$("#sheet").classList.remove("show");$("#sheet").setAttribute("aria-hidden","true");document.body.classList.remove("lock");lastFocus&&lastFocus.focus&&lastFocus.focus()}
+$("#open").onclick=openSheet;$("#close").onclick=closeSheet;$("#veil").onclick=closeSheet;
+$("#dockbtn").onclick=()=>Object.keys(cart).length?openSheet():$("#tienda").scrollIntoView();
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#sheet").classList.contains("show"))closeSheet()});
+
+/* arrastrar la hoja hacia abajo para cerrar */
+(function(){const s=$("#sheet");let y0=null,dy=0;
+ s.addEventListener("touchstart",e=>{if(e.target.closest(".items")&&$("#items").scrollTop>0)return;y0=e.touches[0].clientY;dy=0;s.style.transition="none"},{passive:true});
+ s.addEventListener("touchmove",e=>{if(y0===null)return;dy=Math.max(0,e.touches[0].clientY-y0);s.style.transform=`translateY(${dy}px)`},{passive:true});
+ s.addEventListener("touchend",()=>{if(y0===null)return;s.style.transition="";s.style.transform="";const close=dy>110;y0=null;if(close)closeSheet()});
+})();
+
+document.addEventListener("click",e=>{
+ const a=e.target.closest(".add");
+ if(a){setQty(a.dataset.id,1);const b=$("#count");b.classList.add("pop");setTimeout(()=>b.classList.remove("pop"),250);
+  a.classList.add("ok");a.textContent="Agregado ✓";clearTimeout(a._t);a._t=setTimeout(()=>{a.classList.remove("ok");a.textContent="Agregar"},1200);
+  if(navigator.vibrate)try{navigator.vibrate(12)}catch(_){}return}
+ const q=e.target.closest(".qty button");if(q)setQty(q.dataset.id,+q.dataset.d);
+ const c=e.target.closest(".chip");
+ if(c){document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c));
+  document.querySelectorAll(".card").forEach(k=>k.hidden=c.dataset.f!=="todos"&&k.dataset.cls!==c.dataset.f)}
+});
+addEventListener("storage",e=>{if(e.key==="sonora-cart"){try{cart=JSON.parse(e.newValue||"{}")}catch(_){cart={}}render()}});
+render();
+</script>
+</body>
+</html>
